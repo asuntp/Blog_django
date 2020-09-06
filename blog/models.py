@@ -1,6 +1,12 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+# Создаем пльзовательский менеджет модели
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='published')
+
+# Создаем модель блога
 class Post(models.Model):
     STATUS_CHOICES = (('draft', 'Draft'), ('published', 'Published'),)
     title = models.CharField(max_length=250)
@@ -11,6 +17,8 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    objects = models.Manager()   #Менеджер по умолчанию
+    published = PublishedManager()  #Новый менеджер
 
     class Meta:
         ordering = ('-publish',)
