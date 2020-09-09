@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 # Создаем пльзовательский менеджет модели
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -25,6 +26,15 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    #Для возврата канонического url будем использовать функцию reverse()
+
+    def get_absolute_url(self):
+        return reverse('blog:post_setail', args=[self.publish.year,
+                                                self.publish.month, self.publish.day, self.slug])
+    #Будем использовать метод get_absolute_url() в html шаблонах для получения ссылки на статью
+
+
 
 
 
